@@ -1,0 +1,7 @@
+- 👋 Hi, I’m @aMuhammad Asif
+- 👀 I’m interested in infrastructure development, economic issues, investment in human capital, energy and water crises, and data science.
+- 🌱 I’m currently learning data science, including machine learning and data visualization, through a Data Science bootcamp at Atomcamp.
+- 💞️ I’m looking to collaborate on projects related to data analysis, economic research, and sustainable tourism in Pakistan.
+- 📫 How to reach me: You can reach me through my GitHub profile or via LinkedIn (https://www.linkedin.com/in/msifshigri/).
+- 😄 Pronouns: He/Him
+- ⚡ Fun fact: I am the co-founder of North Trip, promoting eco-friendly tourism in Pakistan, and I am also planning a family trip to Skardu soon!
