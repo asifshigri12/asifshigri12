@@ -1,0 +1,1605 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/asifshigri12/asifshigri12/blob/main/Model%20Building%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "TR_X4RX8zF7E",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "88c29795-71a8-4fc6-9853-8fdcbd62fd35"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz\n",
+            "11490434/11490434 [==============================] - 0s 0us/step\n"
+          ]
+        }
+      ],
+      "source": [
+        "from keras.datasets import mnist\n",
+        "(x_train, y_train), (x_test, y_test) = mnist.load_data()"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Explore the Dataset"
+      ],
+      "metadata": {
+        "id": "n2P9arQ80Faw"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import matplotlib.pyplot as plt #to view images"
+      ],
+      "metadata": {
+        "id": "CaF0JkGo0Ifl"
+      },
+      "execution_count": 12,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train.shape #60000 images, image always in 3d form(28,28)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Gpz45Z6b0WmU",
+        "outputId": "97305141-e85d-4c81-95f5-b0c970f3944b"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(60000, 28, 28)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 13
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "single_image = x_train[0]"
+      ],
+      "metadata": {
+        "id": "q_9hcEsEzSnd"
+      },
+      "execution_count": 14,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "single_image"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 68
+        },
+        "id": "EMAbnSamzgQe",
+        "outputId": "0431a090-112b-4e17-88b8-4fac1cc18355"
+      },
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   3,\n",
+              "         18,  18,  18, 126, 136, 175,  26, 166, 255, 247, 127,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  30,  36,  94, 154, 170,\n",
+              "        253, 253, 253, 253, 253, 225, 172, 253, 242, 195,  64,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,  49, 238, 253, 253, 253, 253,\n",
+              "        253, 253, 253, 253, 251,  93,  82,  82,  56,  39,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,  18, 219, 253, 253, 253, 253,\n",
+              "        253, 198, 182, 247, 241,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  80, 156, 107, 253, 253,\n",
+              "        205,  11,   0,  43, 154,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,  14,   1, 154, 253,\n",
+              "         90,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 139, 253,\n",
+              "        190,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  11, 190,\n",
+              "        253,  70,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  35,\n",
+              "        241, 225, 160, 108,   1,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "         81, 240, 253, 253, 119,  25,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,  45, 186, 253, 253, 150,  27,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,  16,  93, 252, 253, 187,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0, 249, 253, 249,  64,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,  46, 130, 183, 253, 253, 207,   2,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  39,\n",
+              "        148, 229, 253, 253, 253, 250, 182,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  24, 114, 221,\n",
+              "        253, 253, 253, 253, 201,  78,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  23,  66, 213, 253, 253,\n",
+              "        253, 253, 198,  81,   2,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,  18, 171, 219, 253, 253, 253, 253,\n",
+              "        195,  80,   9,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,  55, 172, 226, 253, 253, 253, 253, 244, 133,\n",
+              "         11,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0, 136, 253, 253, 253, 212, 135, 132,  16,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0]], dtype=uint8)"
+            ],
+            "text/html": [
+              "<style>\n",
+              "      .ndarray_repr .ndarray_raw_data {\n",
+              "        display: none;\n",
+              "      }\n",
+              "      .ndarray_repr.show_array .ndarray_raw_data {\n",
+              "        display: block;\n",
+              "      }\n",
+              "      .ndarray_repr.show_array .ndarray_image_preview {\n",
+              "        display: none;\n",
+              "      }\n",
+              "      </style>\n",
+              "      <div id=\"id-82bdce6d-64ea-4ea1-8def-55ee736cefe5\" class=\"ndarray_repr\"><pre>ndarray (28, 28) <button style=\"padding: 0 2px;\">show data</button></pre><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAAAAABXZoBIAAABAElEQVR4nGNgGMyAWUhIqK5jvdSy/9/rGRgYGFhgEnJsVjYCwQwMDAxPJgV+vniQgYGBgREqZ7iXH8r6l/SV4dn7m8gmCt3++/fv37/Htn3/iMW+gDnZf/+e5WbQnoXNNXyMs/5GoQoxwVmf/n9kSGFiwAW49/11wynJoPzx4YIcRlyygR/+/i2XxCWru+vv32nSuGQFYv/83Y3b4p9/fzpAmSyoMnohpiwM1w5h06Q+5enfv39/bcMiJVF09+/fv39P+mFKiTtd/fv3799jgZiBJLT69t+/f/8eDuDEkDJf8+jv379/v7Ryo4qzMDAwMAQGMjBc3/y35wM2V1IfAABFF16Aa0wAOwAAAABJRU5ErkJggg==\" class=\"ndarray_image_preview\" /><pre class=\"ndarray_raw_data\">array([[  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   3,\n",
+              "         18,  18,  18, 126, 136, 175,  26, 166, 255, 247, 127,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  30,  36,  94, 154, 170,\n",
+              "        253, 253, 253, 253, 253, 225, 172, 253, 242, 195,  64,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,  49, 238, 253, 253, 253, 253,\n",
+              "        253, 253, 253, 253, 251,  93,  82,  82,  56,  39,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,  18, 219, 253, 253, 253, 253,\n",
+              "        253, 198, 182, 247, 241,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  80, 156, 107, 253, 253,\n",
+              "        205,  11,   0,  43, 154,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,  14,   1, 154, 253,\n",
+              "         90,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 139, 253,\n",
+              "        190,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  11, 190,\n",
+              "        253,  70,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  35,\n",
+              "        241, 225, 160, 108,   1,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "         81, 240, 253, 253, 119,  25,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,  45, 186, 253, 253, 150,  27,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,  16,  93, 252, 253, 187,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0, 249, 253, 249,  64,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,  46, 130, 183, 253, 253, 207,   2,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  39,\n",
+              "        148, 229, 253, 253, 253, 250, 182,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  24, 114, 221,\n",
+              "        253, 253, 253, 253, 201,  78,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,  23,  66, 213, 253, 253,\n",
+              "        253, 253, 198,  81,   2,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,  18, 171, 219, 253, 253, 253, 253,\n",
+              "        195,  80,   9,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,  55, 172, 226, 253, 253, 253, 253, 244, 133,\n",
+              "         11,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0, 136, 253, 253, 253, 212, 135, 132,  16,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0],\n",
+              "       [  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,\n",
+              "          0,   0]], dtype=uint8)</pre></div><script>\n",
+              "      (() => {\n",
+              "      const titles = ['show data', 'hide data'];\n",
+              "      let index = 0\n",
+              "      document.querySelector('#id-82bdce6d-64ea-4ea1-8def-55ee736cefe5 button').onclick = (e) => {\n",
+              "        document.querySelector('#id-82bdce6d-64ea-4ea1-8def-55ee736cefe5').classList.toggle('show_array');\n",
+              "        index = (++index) % 2;\n",
+              "        document.querySelector('#id-82bdce6d-64ea-4ea1-8def-55ee736cefe5 button').textContent = titles[index];\n",
+              "        e.preventDefault();\n",
+              "        e.stopPropagation();\n",
+              "      }\n",
+              "      })();\n",
+              "    </script>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 15
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "single_image.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JIPwzeMm1uf7",
+        "outputId": "5cde0490-b711-4c57-e270-3c679b403181"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(28, 28)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 16
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.imshow(single_image, cmap='gray') #gray scale"
+      ],
+      "metadata": {
+        "id": "nLGJjXnG1rpQ",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 447
+        },
+        "outputId": "ea4409ec-dce6-4557-ab9c-b50b1830ddea"
+      },
+      "execution_count": 18,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<matplotlib.image.AxesImage at 0x7f2f0ffae9b0>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 18
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 640x480 with 1 Axes>"
+            ],
+            "image/png": "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gQMHPM+sWrXK80ysDh486Hnmrrvu8jzT0dHheeamm27yPCNJjz32WExzgBe8AgIAmCBAAAATBAgAYIIAAQBMECAAgAkCBAAwQYAAACYIEADABAECAJggQAAAEwQIAGCCAAEATPicc856E+cLh8MKBALW20CCZGRkeJ5pb2/3PLNmzRrPM5L04IMPep751re+5Xlm48aNnmeAgSYUCl30v3leAQEATBAgAIAJzwHavXu35s6dq/z8fPl8Pm3dujXqfuecnn76aeXl5WnYsGEqLi7W4cOH47VfAECK8Bygjo4OTZkyRatXr+71/pUrV2rVqlV69dVXtXfvXg0fPlwlJSXq7Oy87M0CAFKH59+IWlpaqtLS0l7vc87p5Zdf1g9+8APdfffdkqT169crNzdXW7du1b333nt5uwUApIy4/gyooaFBLS0tKi4ujtwWCARUWFio2traXme6uroUDoejFgAg9cU1QC0tLZKk3NzcqNtzc3Mj931SZWWlAoFAZI0aNSqeWwIAJCnzd8FVVFQoFApFVlNTk/WWAAD9IK4BCgaDkqTW1tao21tbWyP3fZLf71dGRkbUAgCkvrgGqKCgQMFgUFVVVZHbwuGw9u7dq6Kiong+FABggPP8LriTJ0+qvr4+8nFDQ4MOHjyorKwsjR49WkuWLNGPf/xj3XDDDSooKNBTTz2l/Px8zZs3L577BgAMcJ4DtG/fPt15552Rj5ctWyZJWrRokdatW6cnnnhCHR0devjhh9XW1qbbbrtNO3fu1FVXXRW/XQMABjwuRoqU9MILL8Q09/H/UHlRU1Pjeeb8v6rwafX09HieASxxMVIAQFIiQAAAEwQIAGCCAAEATBAgAIAJAgQAMEGAAAAmCBAAwAQBAgCYIEAAABMECABgggABAEwQIACACa6GjZQ0fPjwmOa2b9/ueeaOO+7wPFNaWup55s9//rPnGcASV8MGACQlAgQAMEGAAAAmCBAAwAQBAgCYIEAAABMECABgggABAEwQIACACQIEADBBgAAAJggQAMAEFyMFzjNu3DjPM++9957nmba2Ns8zb7/9tueZffv2eZ6RpNWrV3ueSbIvJUgCXIwUAJCUCBAAwAQBAgCYIEAAABMECABgggABAEwQIACACQIEADBBgAAAJggQAMAEAQIAmCBAAAATXIwUuEzz58/3PLN27VrPM+np6Z5n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mDFjlJ+fr0OHDun73/++6urq9Pvf/95wt9GSPkD4f6WlpZE/T548WYWFhRozZozeeOMNPfjgg4Y7QzK49957I3+++eabNXnyZI0bN07V1dWaNWuW4c4So6ysTO+///4V8XPQi+nrPDz88MORP998883Ky8vTrFmzdOTIEY0bN66/t9mrpP8WXHZ2tgYPHnzBu1haW1sVDAaNdpUcMjMzdeONN6q+vt56K2Y+fg7w/LjQ2LFjlZ2dnZLPj/Lycu3YsUNvv/121K9vCQaDOnPmjNra2qKOT9XnQ1/noTeFhYWSlFTPh6QPUFpamqZOnaqqqqrIbT09PaqqqlJRUZHhzuydPHlSR44cUV5envVWzBQUFCgYDEY9P8LhsPbu3XvFPz+OHj2qEydOpNTzwzmn8vJybdmyRbt27VJBQUHU/VOnTtXQoUOjng91dXVqbGxMqefDpc5Dbw4ePChJyfV8sH4XxKexadMm5/f73bp169wHH3zgHn74YZeZmelaWlqst9avvve977nq6mrX0NDg/vrXv7ri4mKXnZ3tjh8/br21hGpvb3cHDhxwBw4ccJLcSy+95A4cOOD+9a9/Oeece/75511mZqbbtm2bO3TokLv77rtdQUGBO336tPHO4+ti56G9vd09/vjjrra21jU0NLi33nrLff7zn3c33HCD6+zstN563DzyyCMuEAi46upq19zcHFmnTp2KHLN48WI3evRot2vXLrdv3z5XVFTkioqKDHcdf5c6D/X19e6HP/yh27dvn2toaHDbtm1zY8eOdTNmzDDeebQBESDnnPvFL37hRo8e7dLS0tz06dPdnj17rLfU7+655x6Xl5fn0tLS3HXXXefuueceV19fb72thHv77bedpAvWokWLnHPn3or91FNPudzcXOf3+92sWbNcXV2d7aYT4GLn4dSpU2727Nnu2muvdUOHDnVjxoxxDz30UMr9T1pv//yS3Nq1ayPHnD592n33u991n/nMZ9zVV1/t5s+f75qbm+02nQCXOg+NjY1uxowZLisry/n9fjd+/Hi3fPlyFwqFbDf+Cfw6BgCAiaT/GRAAIDURIACACQIEADBBgAAAJggQAMAEAQIAmCBAAAATBAgAYIIAAQBMECAAgAkCBAAwQYAAACb+Dwuo74MxItlsAAAAAElFTkSuQmCC\n"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_test.shape #10000 images\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8Hj0h5Gs2EBa",
+        "outputId": "2362badc-95c2-4f62-f554-edd6f1b4570a"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(10000, 28, 28)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 21
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_train #Tell labels"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "X391Lx-y4NMk",
+        "outputId": "a5738eb5-90cf-4dc1-bac0-0c5d7858c026"
+      },
+      "execution_count": 22,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([5, 0, 4, ..., 5, 6, 8], dtype=uint8)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 22
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Data Pre-Processing"
+      ],
+      "metadata": {
+        "id": "ZYMR8xsg4KJT"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_test"
+      ],
+      "metadata": {
+        "id": "gRNAKPfZ2Fwv",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "8fbb80be-4cf8-47b0-bdcd-d1e39b91e876"
+      },
+      "execution_count": 23,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([7, 2, 1, ..., 4, 5, 6], dtype=uint8)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 23
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from tensorflow.keras.utils import to_categorical"
+      ],
+      "metadata": {
+        "id": "pe_FgQTW2IAL"
+      },
+      "execution_count": 24,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_train.shape"
+      ],
+      "metadata": {
+        "id": "sHzzLjbU2KUi",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "561fd1cb-a0f7-4654-e3bc-1e8f2cd7acdb"
+      },
+      "execution_count": 25,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(60000,)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 25
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_example = to_categorical(y_train)"
+      ],
+      "metadata": {
+        "id": "WAS4YCjh7eea"
+      },
+      "execution_count": 26,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_example"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "KEb2QIoH7h70",
+        "outputId": "021ae32d-f314-4862-9d8c-fe8080cb7d62"
+      },
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[0., 0., 0., ..., 0., 0., 0.],\n",
+              "       [1., 0., 0., ..., 0., 0., 0.],\n",
+              "       [0., 0., 0., ..., 0., 0., 0.],\n",
+              "       ...,\n",
+              "       [0., 0., 0., ..., 0., 0., 0.],\n",
+              "       [0., 0., 0., ..., 0., 0., 0.],\n",
+              "       [0., 0., 0., ..., 0., 1., 0.]], dtype=float32)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 27
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_example[0]  #one hot encoding"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "B1mq5kYZ-7Xf",
+        "outputId": "72b0aa5c-d074-47fa-c496-4055c0b709e5"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([0., 0., 0., 0., 0., 1., 0., 0., 0., 0.], dtype=float32)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 28
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_cat_test = to_categorical(y_test, num_classes=10)"
+      ],
+      "metadata": {
+        "id": "-dZh_PbJ_OUv"
+      },
+      "execution_count": 29,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "y_cat_test= to_categorical(y_train,10)"
+      ],
+      "metadata": {
+        "id": "BMeCwOSw_R_a"
+      },
+      "execution_count": 30,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Processing the X-Data"
+      ],
+      "metadata": {
+        "id": "waKWORVv_bA4"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "single_image.max()"
+      ],
+      "metadata": {
+        "id": "MhOZlE072VBi",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "1cbde0e8-0859-4c27-8d10-20476ab45e7f"
+      },
+      "execution_count": 31,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "255"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 31
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train = x_train/255\n",
+        "x_test = x_test/255"
+      ],
+      "metadata": {
+        "id": "70UBeILY2XKN"
+      },
+      "execution_count": 33,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "scaled_single = x_train[1]"
+      ],
+      "metadata": {
+        "id": "8mlZiPAN492I"
+      },
+      "execution_count": 37,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "scaled_single.max()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "IJ6CIOWW44JH",
+        "outputId": "f55d6ed5-fe57-4c51-8a35-f875e4f0d4e4"
+      },
+      "execution_count": 40,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "1.0"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 40
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.imshow(scaled_single, cmap='gray')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 447
+        },
+        "id": "NtMscuqPACFk",
+        "outputId": "5fa9c23c-65ca-4dff-c055-2504dcf2ba0f"
+      },
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<matplotlib.image.AxesImage at 0x7f2f1345b820>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 39
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 640x480 with 1 Axes>"
+            ],
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAaAAAAGdCAYAAABU0qcqAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjcuMSwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy/bCgiHAAAACXBIWXMAAA9hAAAPYQGoP6dpAAAb2klEQVR4nO3df2xV9f3H8dct0gtKe1mp7e2VHxYEWUTKZNA1IqI0QHUGlCzIyMTF6HDFKExcuvDLzaQbc8xpGJpsgxkFmdsAMRlGCy2ZKzh+hZhtDSXdWkJbpBn3liKFtJ/vH/1655UWPJd7ebeX5yP5JL3nnHfPm8Phvjj3nvu5PuecEwAAV1madQMAgGsTAQQAMEEAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAAT11k38EWdnZ06ceKEMjIy5PP5rNsBAHjknFNra6tCoZDS0nq+zul1AXTixAkNGzbMug0AwBVqaGjQ0KFDe1zf616Cy8jIsG4BAJAAl3s+T1oArVu3TjfffLMGDBigwsJCffTRR1+qjpfdACA1XO75PCkBtGXLFi1dulSrVq3SwYMHVVBQoJkzZ+rkyZPJ2B0AoC9ySTB58mRXWloafdzR0eFCoZArLy+/bG04HHaSGAwGg9HHRzgcvuTzfcKvgM6fP68DBw6ouLg4uiwtLU3FxcWqrq6+aPv29nZFIpGYAQBIfQkPoFOnTqmjo0O5ubkxy3Nzc9XU1HTR9uXl5QoEAtHBHXAAcG0wvwuurKxM4XA4OhoaGqxbAgBcBQn/HFB2drb69eun5ubmmOXNzc0KBoMXbe/3++X3+xPdBgCgl0v4FVB6eromTpyoioqK6LLOzk5VVFSoqKgo0bsDAPRRSZkJYenSpVq4cKG+/vWva/LkyXrppZfU1tam7373u8nYHQCgD0pKAM2bN0+ffPKJVq5cqaamJk2YMEE7d+686MYEAMC1y+ecc9ZNfF4kElEgELBuAwBwhcLhsDIzM3tcb34XHADg2kQAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwQQAAAEwQQAMAEAQQAMEEAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwQQAAAEwQQAMAEAQQAMEEAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwQQAAAEwQQAMAEAQQAMEEAAQBMEEAAABPXWTcA4MuZOHGi55rFixfHta9HHnnEc83rr7/uueaVV17xXHPw4EHPNeiduAICAJgggAAAJgggAIAJAggAYIIAAgCYIIAAACYIIACACQIIAGCCAAIAmCCAAAAmCCAAgAkCCABgwuecc9ZNfF4kElEgELBuA0iqCRMmeK7ZtWuX55rMzEzPNVdTOBz2XDNkyJAkdIJkCIfDlzwHuQICAJgggAAAJhIeQKtXr5bP54sZY8eOTfRuAAB9XFK+kO62227TBx988L+dXMf33gEAYiUlGa677joFg8Fk/GoAQIpIyntAR48eVSgU0siRI7VgwQLV19f3uG17e7sikUjMAACkvoQHUGFhoTZu3KidO3dq/fr1qqur01133aXW1tZuty8vL1cgEIiOYcOGJbolAEAvlPTPAZ0+fVojRozQ2rVr9dhjj120vr29Xe3t7dHHkUiEEELK43NAXfgcUGq73OeAkn53wODBgzVmzBjV1tZ2u97v98vv9ye7DQBAL5P0zwGdOXNGx44dU15eXrJ3BQDoQxIeQM8++6yqqqr073//W3/729/04IMPql+/fpo/f36idwUA6MMS/hLc8ePHNX/+fLW0tOjGG2/UlClTtHfvXt14442J3hUAoA9jMlLgCk2ePNlzzZ/+9CfPNaFQyHNNvP+8e7pr9VLOnz/vuSaeGwqmTJniuebgwYOea6T4/kz4HyYjBQD0SgQQAMAEAQQAMEEAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwk/QvpAAvXX399XHV33HGH55o33njDc01v/36so0ePeq5Zs2aN55q33nrLc82HH37ouWb58uWeaySpvLw8rjp8OVwBAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwQQAAAEwQQAMAEAQQAMEEAAQBMMBs2UtJrr70WV938+fMT3EnfFM+s4IMGDfJcU1VV5blm2rRpnmvGjx/vuQbJxxUQAMAEAQQAMEEAAQBMEEAAABMEEADABAEEADBBAAEATBBAAAATBBAAwAQBBAAwQQABAEwQQAAAE0xGil5v4sSJnmvuv//+uPbl8/niqvMqnkk4d+zY4bnmxRdf9FwjSSdOnPBc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\n"
+          },
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "scaled_single"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "rFRVRyyGAW6a",
+        "outputId": "6ac43244-c062-499b-9147-87b08c121513"
+      },
+      "execution_count": 41,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([[0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.2       , 0.62352941, 0.99215686, 0.62352941, 0.19607843,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.18823529,\n",
+              "        0.93333333, 0.98823529, 0.98823529, 0.98823529, 0.92941176,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.21176471, 0.89019608,\n",
+              "        0.99215686, 0.98823529, 0.9372549 , 0.91372549, 0.98823529,\n",
+              "        0.22352941, 0.02352941, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.03921569, 0.23529412, 0.87843137, 0.98823529,\n",
+              "        0.99215686, 0.98823529, 0.79215686, 0.32941176, 0.98823529,\n",
+              "        0.99215686, 0.47843137, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.63921569, 0.98823529, 0.98823529, 0.98823529,\n",
+              "        0.99215686, 0.98823529, 0.98823529, 0.37647059, 0.74117647,\n",
+              "        0.99215686, 0.65490196, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.2       , 0.93333333, 0.99215686, 0.99215686, 0.74509804,\n",
+              "        0.44705882, 0.99215686, 0.89411765, 0.18431373, 0.30980392,\n",
+              "        1.        , 0.65882353, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.18823529,\n",
+              "        0.93333333, 0.98823529, 0.98823529, 0.70196078, 0.04705882,\n",
+              "        0.29411765, 0.4745098 , 0.08235294, 0.        , 0.        ,\n",
+              "        0.99215686, 0.95294118, 0.19607843, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.14901961, 0.64705882,\n",
+              "        0.99215686, 0.91372549, 0.81568627, 0.32941176, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.99215686, 0.98823529, 0.64705882, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.02745098, 0.69803922, 0.98823529,\n",
+              "        0.94117647, 0.27843137, 0.0745098 , 0.10980392, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.99215686, 0.98823529, 0.76470588, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.22352941, 0.98823529, 0.98823529,\n",
+              "        0.24705882, 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.99215686, 0.98823529, 0.76470588, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.77647059, 0.99215686, 0.74509804,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        1.        , 0.99215686, 0.76862745, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.29803922, 0.96470588, 0.98823529, 0.43921569,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.99215686, 0.98823529, 0.58039216, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.33333333, 0.98823529, 0.90196078, 0.09803922,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.02745098, 0.52941176,\n",
+              "        0.99215686, 0.72941176, 0.04705882, 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.33333333, 0.98823529, 0.8745098 , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.02745098, 0.51372549, 0.98823529,\n",
+              "        0.88235294, 0.27843137, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.33333333, 0.98823529, 0.56862745, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.18823529, 0.64705882, 0.98823529, 0.67843137,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.3372549 , 0.99215686, 0.88235294, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.44705882, 0.93333333, 0.99215686, 0.63529412, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.33333333, 0.98823529, 0.97647059, 0.57254902,\n",
+              "        0.18823529, 0.11372549, 0.33333333, 0.69803922, 0.88235294,\n",
+              "        0.99215686, 0.8745098 , 0.65490196, 0.21960784, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.33333333, 0.98823529, 0.98823529, 0.98823529,\n",
+              "        0.89803922, 0.84313725, 0.98823529, 0.98823529, 0.98823529,\n",
+              "        0.76862745, 0.50980392, 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.10980392, 0.78039216, 0.98823529, 0.98823529,\n",
+              "        0.99215686, 0.98823529, 0.98823529, 0.91372549, 0.56862745,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.09803922, 0.50196078, 0.98823529,\n",
+              "        0.99215686, 0.98823529, 0.55294118, 0.14509804, 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ],\n",
+              "       [0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        , 0.        , 0.        ,\n",
+              "        0.        , 0.        , 0.        ]])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 41
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Reshaping the Data"
+      ],
+      "metadata": {
+        "id": "Y9GNxWQnCNGc"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JrqtMzJ7AW27",
+        "outputId": "314235cf-5aa6-4c4e-b0de-5b6c5f872107"
+      },
+      "execution_count": 42,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(60000, 28, 28)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 42
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_test.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xWlGbVHiAWwR",
+        "outputId": "33e34699-daa7-4cdf-c930-9d73475e040b"
+      },
+      "execution_count": 43,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(10000, 28, 28)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 43
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train = x_train.reshape(60000, 28,28,1)"
+      ],
+      "metadata": {
+        "id": "UzgYQtpSAWhU"
+      },
+      "execution_count": 44,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5ngPfBM2AWUg",
+        "outputId": "cd6bc062-1f76-49be-bbe7-3ace6c3c7a7c"
+      },
+      "execution_count": 45,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(60000, 28, 28, 1)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 45
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_test = x_test.reshape(10000, 28,28,1)"
+      ],
+      "metadata": {
+        "id": "BKFqQXdoCjM3"
+      },
+      "execution_count": 46,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_test.shape"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "DZRtMpiDCi8H",
+        "outputId": "60d6ecd0-effe-4f50-e82b-423933197f27"
+      },
+      "execution_count": 48,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(10000, 28, 28, 1)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 48
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Building the Model"
+      ],
+      "metadata": {
+        "id": "54wICbyXC4T-"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from keras.models import Sequential\n",
+        "from keras.layers import Dense, Conv2D, MaxPool2D, Flatten #mx flatten 2d array flatten"
+      ],
+      "metadata": {
+        "id": "Tfh1TKJXCi5H"
+      },
+      "execution_count": 49,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model = Sequential()\n",
+        "# First Convalutional layer  #filters can be anything, kernal size 4*4 can b adjusted by our inyterest\n",
+        "model.add(Conv2D(filters=32, kernel_size=(4,4), input_shape=(28,28,1), activation='relu'))\n",
+        "# Pooling layer\n",
+        "model.add(MaxPool2D(pool_size=(2,2))) #max ma bara use nhi karta\n",
+        "#flatten the 2d array into 1d array\n",
+        "model.add(Flatten())\n",
+        "#standard NN layer\n",
+        "model.add(Dense(128, activation='relu'))\n",
+        "#output layer\n",
+        "model.add(Dense(10, activation='softmax'))\n",
+        "\n",
+        "# Convert labels to categorical (one-hot encoding)\n",
+        "y_cat_train = to_categorical(y_train, num_classes=10)\n",
+        "model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])\n"
+      ],
+      "metadata": {
+        "id": "y4Y3dCcVDRg0"
+      },
+      "execution_count": 53,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.summary()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "183gwSR8E_mb",
+        "outputId": "980b7730-c22f-423a-a2b2-b03f3ba99498"
+      },
+      "execution_count": 54,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model: \"sequential_1\"\n",
+            "_________________________________________________________________\n",
+            " Layer (type)                Output Shape              Param #   \n",
+            "=================================================================\n",
+            " conv2d_1 (Conv2D)           (None, 25, 25, 32)        544       \n",
+            "                                                                 \n",
+            " max_pooling2d_1 (MaxPoolin  (None, 12, 12, 32)        0         \n",
+            " g2D)                                                            \n",
+            "                                                                 \n",
+            " flatten_1 (Flatten)         (None, 4608)              0         \n",
+            "                                                                 \n",
+            " dense_2 (Dense)             (None, 128)               589952    \n",
+            "                                                                 \n",
+            " dense_3 (Dense)             (None, 10)                1290      \n",
+            "                                                                 \n",
+            "=================================================================\n",
+            "Total params: 591786 (2.26 MB)\n",
+            "Trainable params: 591786 (2.26 MB)\n",
+            "Non-trainable params: 0 (0.00 Byte)\n",
+            "_________________________________________________________________\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.fit(x_train, y_cat_train, epochs=5)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "CsMU4oXVE_im",
+        "outputId": "ef24cb6f-3aa4-4d76-ab0b-3a11ef16cb71"
+      },
+      "execution_count": 55,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Epoch 1/5\n",
+            "1875/1875 [==============================] - 35s 18ms/step - loss: 0.1365 - accuracy: 0.9589\n",
+            "Epoch 2/5\n",
+            "1875/1875 [==============================] - 36s 19ms/step - loss: 0.0460 - accuracy: 0.9859\n",
+            "Epoch 3/5\n",
+            "1875/1875 [==============================] - 36s 19ms/step - loss: 0.0304 - accuracy: 0.9911\n",
+            "Epoch 4/5\n",
+            "1875/1875 [==============================] - 37s 20ms/step - loss: 0.0193 - accuracy: 0.9936\n",
+            "Epoch 5/5\n",
+            "1875/1875 [==============================] - 50s 27ms/step - loss: 0.0136 - accuracy: 0.9956\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<keras.src.callbacks.History at 0x7f2f13229ff0>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 55
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Checking the Results"
+      ],
+      "metadata": {
+        "id": "XMxrh5cZ5GMB"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np"
+      ],
+      "metadata": {
+        "id": "HIYEXF4b5Ie0"
+      },
+      "execution_count": 57,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "predictions = model.predict(x_test)"
+      ],
+      "metadata": {
+        "id": "qEZkQWJT5OWg",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "1c16a03f-70c7-4e17-cd6d-1dff109dfe4a"
+      },
+      "execution_count": 58,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "313/313 [==============================] - 5s 13ms/step\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "predictions[0]"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "124xZCoz5Q0c",
+        "outputId": "eb73adcf-807d-46cd-dfb4-8de0c500d952"
+      },
+      "execution_count": 59,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([2.7395949e-10, 6.0619637e-10, 2.0195046e-09, 1.9303484e-07,\n",
+              "       6.7796829e-10, 1.3335023e-10, 7.0573777e-15, 9.9999875e-01,\n",
+              "       1.9637888e-08, 8.8692599e-07], dtype=float32)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 59
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "predicted_class = np.argmax(predictions, axis=1)"
+      ],
+      "metadata": {
+        "id": "1Z7PnmUY5TQT"
+      },
+      "execution_count": 61,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "predicted_class"
+      ],
+      "metadata": {
+        "id": "koac9oQV5VS1",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "d8dccf4f-a043-4abb-9038-42fef146a458"
+      },
+      "execution_count": 62,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array([7, 2, 1, ..., 4, 5, 6])"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 62
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#Evaluate the Results"
+      ],
+      "metadata": {
+        "id": "56_EGC3KIWTe"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.metrics import classification_report\n",
+        "classification_report(y_test, predicted_class)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 174
+        },
+        "id": "sXEoX1Cx5tPB",
+        "outputId": "7352e370-4f06-4fcc-832b-cffb5809616f"
+      },
+      "execution_count": 63,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'              precision    recall  f1-score   support\\n\\n           0       0.99      0.99      0.99       980\\n           1       0.99      1.00      0.99      1135\\n           2       0.98      0.99      0.98      1032\\n           3       0.99      0.99      0.99      1010\\n           4       0.99      0.99      0.99       982\\n           5       0.99      0.98      0.99       892\\n           6       0.99      0.99      0.99       958\\n           7       0.99      0.99      0.99      1028\\n           8       0.99      0.97      0.98       974\\n           9       0.99      0.98      0.98      1009\\n\\n    accuracy                           0.99     10000\\n   macro avg       0.99      0.99      0.99     10000\\nweighted avg       0.99      0.99      0.99     10000\\n'"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 63
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.evaluate(x_test, y_cat_test)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 356
+        },
+        "id": "oMaaMEWT5ZuC",
+        "outputId": "f12bd281-149c-459a-ed37-83755d882317"
+      },
+      "execution_count": 67,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "ValueError",
+          "evalue": "Data cardinality is ambiguous:\n  x sizes: 10000\n  y sizes: 60000\nMake sure all arrays contain the same number of samples.",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-67-30a19b83c06c>\u001b[0m in \u001b[0;36m<cell line: 1>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mmodel\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mevaluate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mx_test\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0my_cat_test\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/keras/src/utils/traceback_utils.py\u001b[0m in \u001b[0;36merror_handler\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m     68\u001b[0m             \u001b[0;31m# To get the full stack trace, call:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     69\u001b[0m             \u001b[0;31m# `tf.debugging.disable_traceback_filtering()`\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 70\u001b[0;31m             \u001b[0;32mraise\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mwith_traceback\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfiltered_tb\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     71\u001b[0m         \u001b[0;32mfinally\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     72\u001b[0m             \u001b[0;32mdel\u001b[0m \u001b[0mfiltered_tb\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/keras/src/engine/data_adapter.py\u001b[0m in \u001b[0;36m_check_data_cardinality\u001b[0;34m(data)\u001b[0m\n\u001b[1;32m   1958\u001b[0m             )\n\u001b[1;32m   1959\u001b[0m         \u001b[0mmsg\u001b[0m \u001b[0;34m+=\u001b[0m \u001b[0;34m\"Make sure all arrays contain the same number of samples.\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1960\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mValueError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmsg\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1961\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1962\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mValueError\u001b[0m: Data cardinality is ambiguous:\n  x sizes: 10000\n  y sizes: 60000\nMake sure all arrays contain the same number of samples."
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "x_train.max()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "YMhxZIM97BWJ",
+        "outputId": "095fc609-6355-4755-e0ff-a5e478e330c1"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "17.9274"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 27
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "transform= x_train/17.9274"
+      ],
+      "metadata": {
+        "id": "81X0kgDb7IWe"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Building The Neural Network"
+      ],
+      "metadata": {
+        "id": "llAzQ45e8Ahj"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from keras.models import Sequential\n",
+        "from keras.layers import Dense"
+      ],
+      "metadata": {
+        "id": "Ja2Ysbe28C-s"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model = Sequential()"
+      ],
+      "metadata": {
+        "id": "E4XYJJWM--n3"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from keras.models import Sequential\n",
+        "from keras.layers import Dense\n",
+        "\n",
+        "model = Sequential()\n",
+        "# First hidden layer with 4 units, input dimension is 4\n",
+        "model.add(Dense(4, input_dim=4, activation='relu'))\n",
+        "# Second hidden layer with 8 units\n",
+        "model.add(Dense(8, activation='relu'))\n",
+        "# Output layer with 1 unit, using sigmoid activation for binary classification\n",
+        "model.add(Dense(1, activation='sigmoid'))\n"
+      ],
+      "metadata": {
+        "id": "iXHIz3P08Id7"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])"
+      ],
+      "metadata": {
+        "id": "MESnRddo_duY"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model.fit(scaled_x_train, y_train, epochs=10, verbose=2) #epochs repeat for ten times verbose format output"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cmxukotz_hsU",
+        "outputId": "f1fe34af-3d2e-451f-fb62-0e8b7cb8ce17"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Epoch 1/10\n",
+            "35/35 - 1s - loss: 0.6646 - accuracy: 0.5524 - 1s/epoch - 39ms/step\n",
+            "Epoch 2/10\n",
+            "35/35 - 0s - loss: 0.6541 - accuracy: 0.5524 - 95ms/epoch - 3ms/step\n",
+            "Epoch 3/10\n",
+            "35/35 - 0s - loss: 0.6431 - accuracy: 0.5524 - 112ms/epoch - 3ms/step\n",
+            "Epoch 4/10\n",
+            "35/35 - 0s - loss: 0.6301 - accuracy: 0.5524 - 116ms/epoch - 3ms/step\n",
+            "Epoch 5/10\n",
+            "35/35 - 0s - loss: 0.6071 - accuracy: 0.6673 - 108ms/epoch - 3ms/step\n",
+            "Epoch 6/10\n",
+            "35/35 - 0s - loss: 0.5776 - accuracy: 0.8414 - 116ms/epoch - 3ms/step\n",
+            "Epoch 7/10\n",
+            "35/35 - 0s - loss: 0.5476 - accuracy: 0.8651 - 103ms/epoch - 3ms/step\n",
+            "Epoch 8/10\n",
+            "35/35 - 0s - loss: 0.5170 - accuracy: 0.8687 - 89ms/epoch - 3ms/step\n",
+            "Epoch 9/10\n",
+            "35/35 - 0s - loss: 0.4845 - accuracy: 0.9052 - 86ms/epoch - 2ms/step\n",
+            "Epoch 10/10\n",
+            "35/35 - 0s - loss: 0.4522 - accuracy: 0.9079 - 84ms/epoch - 2ms/step\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "<keras.src.callbacks.History at 0x7db856f38700>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 45
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "eVALUATE THE mODEL"
+      ],
+      "metadata": {
+        "id": "n0_JpATKEihq"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "# Get the predicted probabilities\n",
+        "predicted_probabilities = model.predict(scaled_x_test)\n",
+        "\n",
+        "# Apply a threshold to get the predicted classes\n",
+        "predictions = (predicted_probabilities > 0.5).astype(\"int32\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "YS_pjbzaEkYD",
+        "outputId": "d66f3902-1d2c-4575-a777-8010cb2a9940"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "9/9 [==============================] - 0s 3ms/step\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.metrics import classification_report"
+      ],
+      "metadata": {
+        "id": "TzUlAeclFz7T"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "confusion_matrix(y_test,predictions)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 141
+        },
+        "id": "cilMa6i0F4_N",
+        "outputId": "22373211-5093-4a76-def8-38ecbfdbeba3"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "NameError",
+          "evalue": "name 'confusion_matrix' is not defined",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-52-a34550c60e95>\u001b[0m in \u001b[0;36m<cell line: 1>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mconfusion_matrix\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0my_test\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mpredictions\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m: name 'confusion_matrix' is not defined"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print (classification_report(y_test,predictions))"
+      ],
+      "metadata": {
+        "id": "o9SRpCGoGLBT"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
